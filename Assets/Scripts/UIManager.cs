@@ -17,9 +17,8 @@ public class UIManager : MonoSingletone<UIManager>
 {
     private Transform _canvasTrasn;
 
-    private Dictionary<string, UIBase> _container =  new Dictionary<string, UIBase>();
-
     // 컨테이너에 저장해서 관리하면 된다. 
+    private Dictionary<string, UIBase> _container =  new Dictionary<string, UIBase>();
 
     private string _uiPath = "Prefab/";
 
@@ -29,6 +28,7 @@ public class UIManager : MonoSingletone<UIManager>
         {
             gameObject.AddComponent<Canvas>();
             gameObject.AddComponent<CanvasScaler>();
+            gameObject.AddComponent<GraphicRaycaster>();
             _canvasTrasn = gameObject.transform;
         }    
         else
