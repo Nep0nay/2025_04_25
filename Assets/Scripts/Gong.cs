@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Gong : MonoBehaviour
+public class Gong : MonoSingletone<Gong>
 {
     public enum GongState
     {
@@ -110,6 +110,17 @@ public class Gong : MonoBehaviour
 
         GameManager manager = GameManager.Instance;
 
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            manager._isPlay = false;
+            Debug.Log("GameOver");
+
+            UIManager.Instance.CreateUI<EndUI>();
+            //EndUI는 EndUI오브젝트에 붙여져 있고, CreatUI에서 프리팹 + typeof(T).ToString()으로 만들어서 
+            //UIManager.Instance.CreateUI<EndUI>(); 이 코드 하나로 프리팹->EndUI에 접근해서 EndUI오브젝트가 불린다.
+        }
+
+
         Vector3 center = (transform.position + other.transform.position) * 0.5f;
 
         manager.CreateEffect(center);
@@ -117,7 +128,10 @@ public class Gong : MonoBehaviour
 
         Destroy(other.gameObject);
         Destroy(gameObject);
-        
+
+
+
+
     }
 
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using static Unity.Burst.Intrinsics.X86.Avx;
 using System.Xml.Linq;
 using UnityEngine.UI;
+using Gpm.Common.ThirdParty.MessagePack.Resolvers;
+
 
 public class UIBase : MonoBehaviour
 {
@@ -10,30 +12,17 @@ public class UIBase : MonoBehaviour
 }
 
 
-// 생성, 관리,삭제를 담당하겠다. 
-// 이름으로 관리! 
-
 public class UIManager : MonoSingletone<UIManager>
 {
+    [SerializeField]
     private Transform _canvasTrasn;
+
 
     // 컨테이너에 저장해서 관리하면 된다. 
     private Dictionary<string, UIBase> _container =  new Dictionary<string, UIBase>();
 
     private string _uiPath = "Prefab/";
 
-    private void Awake()
-    {
-        if(_canvasTrasn == null)
-        {
-            gameObject.AddComponent<Canvas>();
-            gameObject.AddComponent<CanvasScaler>();
-            gameObject.AddComponent<GraphicRaycaster>();
-            _canvasTrasn = gameObject.transform;
-        }    
-        else
-            _canvasTrasn = transform;
-    }
 
     public void CreateUI<T>() where T : UIBase
     {   
@@ -43,43 +32,6 @@ public class UIManager : MonoSingletone<UIManager>
         T STcomp = STsceanGO.GetComponent<T>();
         _container.Add(typeof(T).ToString(), STcomp);
 
-        RemoveContainerUI("StartUI");
-
-        //ModeUI
-        GameObject MDresGO = Resources.Load<GameObject>(_uiPath + typeof(T).ToString());
-        GameObject MDsceanGO = Instantiate(MDresGO, _canvasTrasn, false);
-        T MDuiComp = MDsceanGO.GetComponent<T>();
-        _container.Add(typeof(T).ToString(), MDuiComp);
-
-        ModeUI modeUI = MDuiComp as ModeUI;
-        if (modeUI != null)
-        {
-            modeUI.AddTimeClickEvent(GameManager.Instance.OnClickTimeAttackMode);
-            RemoveContainerUI("ModeUI");
-        }
-
-        //ScoreUI
-        GameObject scoreUIRes = Resources.Load<GameObject>(_uiPath + typeof(T).ToString());
-        GameObject scoreUIGo = Instantiate(scoreUIRes, _canvasTrasn, false);
-        T scoreUIComp = scoreUIGo.GetComponent<T>();
-        _container.Add(typeof(T).ToString(), scoreUIComp);
-
-
-        //Add Score
-        UIBase strtui;
-        bool result = _container.TryGetValue("ScoreUI", out strtui);
-
-        if (result)
-        {
-            ScoreUI comp;
-
-            comp = strtui as ScoreUI;
-
-            if (comp != null)
-            {
-                comp.ChangeScore(2000);
-            }
-        }
     }
 
     private void RemoveContainerUI(string uiName)
@@ -98,16 +50,16 @@ public class UIManager : MonoSingletone<UIManager>
     public void CreateStartUI()
     {
         // ModeUI 프리팹을 리소스를 로드해서, Instantiate한다. 
-        /*GameObject resGO = Resources.Load<GameObject>("Prefab/StartUI");
+        GameObject resGO = Resources.Load<GameObject>("Prefab/StartUI");
         GameObject sceanGO = Instantiate(resGO, _canvasTrasn, false);
         StartUI comp = sceanGO.GetComponent<StartUI>();
 
-        _container.Add(typeof(StartUI).ToString(), comp);*/
+        _container.Add(typeof(StartUI).ToString(), comp);
     }
 
     public void CreateModeUI()
     {
-        /*RemoveContainerUI("StartUI");
+        RemoveContainerUI("StartUI");
 
         // 게임매니저가 ModUI만들어주고 있었는데 
         GameObject resGO = Resources.Load<GameObject>("Prefab/ModeUI");
@@ -119,29 +71,31 @@ public class UIManager : MonoSingletone<UIManager>
 
         uiComp.AddTimeClickEvent(GameManager.Instance.OnClickTimeAttackMode);
         uiComp.AddTimeClickEvent(RemoveModeUI);
-        */
+        
     }
+
+    
 
     private void RemoveModeUI()
     {
-        //RemoveContainerUI("ModeUI");
+        RemoveContainerUI("ModeUI");
     }
 
     public void CreateScoreUI()
     {
-        /*
+        
         // 게임 UI 로드하는 부분 
         GameObject scoreUIRes = Resources.Load<GameObject>("Prefab/ScoreUI");
         GameObject scoreUIGo = Instantiate(scoreUIRes, _canvasTrasn, false);
         ScoreUI scoreUIComp = scoreUIGo.GetComponent<ScoreUI>();
 
         _container.Add("ScoreUI", scoreUIComp);
-        */
+        
     }
 
     public void AddScore()
     {
-        /*UIBase strtui;
+        UIBase strtui;
         bool result = _container.TryGetValue("ScoreUI", out strtui);
 
         if (result)
@@ -156,6 +110,6 @@ public class UIManager : MonoSingletone<UIManager>
             }
         }
 
-        //scoreUIComp.ChangeScore(20000); */
+        //scoreUIComp.ChangeScore(20000); 
     }
 }
