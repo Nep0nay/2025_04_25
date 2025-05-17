@@ -93,23 +93,5 @@ public class UIManager : MonoSingletone<UIManager>
         
     }
 
-    public void AddScore()
-    {
-        UIBase strtui;
-        bool result = _container.TryGetValue("ScoreUI", out strtui);
-
-        if (result)
-        {
-            ScoreUI comp;
-
-            comp = strtui as ScoreUI;
-
-            if (comp != null)
-            {
-                comp.ChangeScore(2000);
-            }
-        }
-
-        //scoreUIComp.ChangeScore(20000); 
-    }
+    
 }

@@ -17,22 +17,7 @@ public class GameManager : MonoSingletone<GameManager>
         UIManager.Instance.CreateStartUI();        
     }
 
-    /*private void OnClickStartButton()
-    {
-        //_startButton.gameObject.SetActive(false);       
-
-        Debug.Log("OnClickStartButton");
-        // ModeUI 프리팹을 리소스를 로드해서, Instantiate한다. 
-        GameObject resGO = Resources.Load<GameObject>("Prefab/ModeUI");
-        Debug.Log("resGO : " + resGO);
-
-        GameObject sceanGO = Instantiate(resGO, _canvasTrasn, false);
-        ModeUI uiComp = sceanGO.GetComponent<ModeUI>();
-        uiComp.AddTimeClickEvent(OnClickTimeAttackMode);
-        uiComp.AddStageClickEvent(OnClickStageMode);
-    }*/
-
-    // 맨처음 StartUI버튼 눌렸을때 함수 
+    // 맨처음 LobbyUI버튼 눌렸을때 함수 
     public void OnClickStartButton()
     {
         UIManager.Instance.CreateModeUI();
@@ -40,7 +25,7 @@ public class GameManager : MonoSingletone<GameManager>
 
     public void OnClickTimeAttackMode()
     {
-       Debug.Log("OnClickTimeAttackMode");
+        Debug.Log("OnClickTimeAttackMode");
 
         StartCoroutine(LoadSceneAsync("GameScene"));
     }
@@ -107,10 +92,6 @@ public class GameManager : MonoSingletone<GameManager>
         gongGo.transform.position= pos;
     }
 
-    public void AddScore()
-    {
-        UIManager.Instance.AddScore();
-    }
 
     int index = 0;
 
